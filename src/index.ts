@@ -1,8 +1,13 @@
 import express from 'express';
 import multer from 'multer';
-import { Request, Response } from 'express';
+import { Request, Response} from 'express';
 import * as dotenv from 'dotenv';
+const { randomUUID } = require("crypto");
+import {AzureKeyCredential} from "@azure/core-auth";
+import createFaceClient from "@azure-rest/ai-vision-face";
+import {getLongRunningPoller} from "@azure-rest/ai-vision-face";
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 // Load environment variables from .env file
 dotenv.config();
 
