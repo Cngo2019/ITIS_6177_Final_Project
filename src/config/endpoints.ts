@@ -1,0 +1,1 @@
+export const AZURE_FACE_ENDPOINT = 'https://itis6177faceapi.cognitiveservices.azure.com/face/2021-04-30/detect'
