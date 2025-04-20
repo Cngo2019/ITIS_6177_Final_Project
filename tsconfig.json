@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",                  // JS version to compile to
+    "module": "CommonJS",                // Node.js module system
+    "rootDir": "src",                    // Where your TypeScript source files live
+    "outDir": "dist",                    // Where to output compiled JavaScript
+    "strict": true,                      // Enable all strict type-checking options
+    "esModuleInterop": true,             // Allow default imports from CommonJS modules
+    "forceConsistentCasingInFileNames": true, // Enforce consistent file name casing
+    "skipLibCheck": true                 // Skip type checking of node_modules for speed
+  },
+  "include": ["src"],                    // What to compile
+  "exclude": ["node_modules", "dist"]   // What to ignore
+}
