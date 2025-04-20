@@ -3,7 +3,6 @@ import multer from 'multer';
 import * as dotenv from 'dotenv';
 import {AZURE_FACE_ENDPOINT} from "./config/endpoints";
 import axios from "axios";
-import {Face} from "./types/apiresponses";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -18,7 +17,7 @@ const upload = multer({storage: multer.memoryStorage()});
 
 app.use(express.json());
 
-async function fetchData(image: Buffer): Promise<Face[]> {
+async function fetchData(image: Buffer): Promise<any> {
     try {
         const response = await axios.post(endpoint, image, {
             headers: {
