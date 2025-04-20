@@ -1,9 +1,17 @@
 import express from 'express';
 import multer from 'multer';
 import { Request, Response } from 'express';
+import * as dotenv from 'dotenv';
 
+// Load environment variables from .env file
+dotenv.config();
+
+// Access environment variables
+const port = process.env.PORT;
+const apiKey = process.env.API_KEY;
+const bad = process.env.HELLO;
 const app = express();
-const port = 3000;
+
 const upload = multer({ storage: multer.memoryStorage() });
 
 app.use(express.json());
