@@ -1,8 +1,10 @@
-import express, { Request, Response } from 'express';
+import express, {Request, response, Response} from 'express';
 import multer from 'multer';
 import * as dotenv from 'dotenv';
 import { AZURE_CV_ENDPOIONT } from './config/endpoints';
 import axios from 'axios';
+import {ImageAnalysisResult} from "./types/azureresponses/responses";
+import {validateAndConvert} from "./utils";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -16,7 +18,7 @@ const app = express();
 // Configure multer to store files in memory
 const upload = multer({ storage: multer.memoryStorage() });
 
-async function fetchData(image: Buffer): Promise<any> {
+async function fetchData(image: Buffer): Promise<ImageAnalysisResult> {
     try {
         const response = await axios.post(endpoint, image, {
             headers: {
@@ -27,24 +29,27 @@ async function fetchData(image: Buffer): Promise<any> {
 
         return response.data;
     } catch (error: any) {
-        console.error('Error detecting faces:', error.response?.data || error.message);
-        throw new Error('Face detection failed');
+        throw new Error('An error occurred trying to fetch the data');
     }
 }
 
 // File upload endpoint
 app.post('/describe', upload.single('photo'), async (req: Request, res: Response): Promise<any> => {
-    console.log('Content-Type:', req.headers['content-type']);
-    console.log('File:', req.file);
-
     if (!req.file) {
         return res.status(400).send('No photo uploaded');
     }
 
     const imageToUpload = req.file.buffer;
-    console.log(imageToUpload);
     const data = await fetchData(imageToUpload);
-    return res.send(data);
+    const confThreshold = validateAndConvert(req.params.confidence);
+    const tags = data.tagsResult.values.map(it => it.confidence >= confThreshold);
+    return res.send( {
+        description: data.captionResult.text,
+        associatedWords: tags,
+        width: data.metaData.width,
+        height: data.metaData.height,
+        confidence: confThreshold
+    } );
 });
 
 // ONLY apply JSON parser after file routes
