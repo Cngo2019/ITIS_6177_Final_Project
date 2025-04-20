@@ -9,7 +9,6 @@ dotenv.config();
 // Access environment variables
 const port = process.env.PORT;
 const apiKey = process.env.API_KEY;
-const bad = process.env.HELLO;
 const app = express();
 
 const upload = multer({ storage: multer.memoryStorage() });
