@@ -23,7 +23,7 @@ export interface ImageAnalysisResult {
     modelVersion: string;
     captionResult: CaptionResult;
     tagsResult: TagsResult;
-    metaData: {
+    metadata: {
         width: number,
         height: number
     }

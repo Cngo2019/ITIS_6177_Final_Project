@@ -42,12 +42,12 @@ app.post('/describe', upload.single('photo'), async (req: Request, res: Response
     const imageToUpload = req.file.buffer;
     const data = await fetchData(imageToUpload);
     const confThreshold = validateAndConvert(req.params.confidence);
-    const tags = data.tagsResult.values.map(it => it.confidence >= confThreshold);
+    const tags = data.tagsResult.values.filter(it => it.confidence >= confThreshold);
     return res.send( {
         description: data.captionResult.text,
-        associatedWords: tags,
-        width: data.metaData.width,
-        height: data.metaData.height,
+        associatedWords: tags.map(it => it.name),
+        width: data.metadata.width,
+        height: data.metadata.height,
         confidence: confThreshold
     } );
 });
