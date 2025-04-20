@@ -45,7 +45,8 @@ app.post('/remove-background', upload.single('photo'), async (req: Request, res:
     }
     const imageToUpload = req.file.buffer;
     const data = await callImageSegmentEndpoint(imageToUpload);
-    return res.send({segmentedImage: data});
+    res.setHeader('Content-Type', 'image/png');
+    res.send(Buffer.from(data as Uint8Array));
 });
 
 
@@ -70,13 +71,14 @@ async function callAnalyzeImageEndpoint(image: Buffer): Promise<ImageAnalysisRes
 
 async function callImageSegmentEndpoint(
     image: Buffer
-): Promise<string> {
+): Promise<ArrayBuffer> {
     try {
         const response = await axios.post(SEGMENT_IMAGE_URL, image, {
             headers: {
                 'Ocp-Apim-Subscription-Key': apiKey,
                 'Content-Type': 'application/octet-stream',
-            }
+            },
+            responseType: 'arraybuffer'
         });
 
         return response.data;
