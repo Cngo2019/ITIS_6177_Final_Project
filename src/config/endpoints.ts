@@ -1,1 +1,1 @@
-export const AZURE_FACE_ENDPOINT = 'https://itis6177faceapi.cognitiveservices.azure.com/face/2021-04-30/detect'
+export const AZURE_CV_ENDPOIONT = 'https://6177computervision.cognitiveservices.azure.com//computervision/imageanalysis:analyze?api-version=2024-02-01&features=tags,read,caption,denseCaptions,people'
