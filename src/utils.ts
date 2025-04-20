@@ -1,3 +1,6 @@
+
+import { Request, Response, NextFunction } from 'express';
+
 /**
  * Parses and validates a confidence query parameter.
  *
@@ -23,3 +26,20 @@ export function validateAndConvert(input?: string): number {
 
     return parsed;
 }
+
+/**
+ * Global error-handling middleware.
+ * Catches thrown errors and sends 400 with message.
+ */
+export function errorHandler(
+    err: any,
+    req: Request,
+    res: Response,
+    next: NextFunction
+): void {
+    console.error('[Error]:', err.message || err);
+    res.status(400).json({
+        error: err.message || 'Something went wrong.',
+    });
+}
+

@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 import { AZURE_CV_ENDPOIONT } from './config/endpoints';
 import axios from 'axios';
 import {ImageAnalysisResult} from "./types/azureresponses/responses";
-import {validateAndConvert} from "./utils";
+import {errorHandler, validateAndConvert} from "./utils";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -29,7 +29,11 @@ async function fetchData(image: Buffer): Promise<ImageAnalysisResult> {
 
         return response.data;
     } catch (error: any) {
-        throw new Error('An error occurred trying to fetch the data');
+        const azureErrorMessage =
+            error?.response?.data?.error?.message ||
+            error?.response?.data?.message ||
+            error?.message;
+        throw new Error("An error occurred while calling the computer vision api: " + azureErrorMessage);
     }
 }
 
@@ -41,7 +45,7 @@ app.post('/describe', upload.single('photo'), async (req: Request, res: Response
 
     const imageToUpload = req.file.buffer;
     const data = await fetchData(imageToUpload);
-    const confThreshold = validateAndConvert(req.params.confidence);
+    const confThreshold = validateAndConvert(req.query.confidence as string);
     const tags = data.tagsResult.values.filter(it => it.confidence >= confThreshold);
     return res.send( {
         description: data.captionResult.text,
@@ -54,7 +58,7 @@ app.post('/describe', upload.single('photo'), async (req: Request, res: Response
 
 // ONLY apply JSON parser after file routes
 app.use(express.json());
-
+app.use(errorHandler);
 app.listen(port, () => {
     console.log(`Facial Analysis API is running at http://localhost:${port}`);
 });
