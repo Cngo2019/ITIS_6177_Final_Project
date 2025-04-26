@@ -11,4 +11,8 @@ router.get("/remove-background", (req, res) => {
     res.sendFile(path.join(process.cwd(), 'public/remove-background', 'remove-background.html'));
 });
 
+router.get("/", (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'public', 'docs.html'));
+})
+
 export default router;
