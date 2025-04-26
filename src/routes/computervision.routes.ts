@@ -13,7 +13,19 @@ const apiKey = process.env.API_KEY;
 const router = Router();
 
 // Configure multer to store files in memory
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        fileSize: 5 * 1024 * 1024 // Max 5 MB
+    },
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only image files are allowed!'));
+        }
+    }
+});
 
 router.post('/describe', upload.single('photo'), async (req: Request, res: Response): Promise<any> => {
     if (!req.file) {
