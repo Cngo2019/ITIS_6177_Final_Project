@@ -15,7 +15,6 @@ const router = Router();
 // Configure multer to store files in memory
 const upload = multer({ storage: multer.memoryStorage() });
 
-// File upload endpoint
 router.post('/describe', upload.single('photo'), async (req: Request, res: Response): Promise<any> => {
     if (!req.file) {
         return res.status(400).send('No photo uploaded');
@@ -36,7 +35,6 @@ router.post('/describe', upload.single('photo'), async (req: Request, res: Respo
     } );
 });
 
-// File upload endpoint
 router.post('/remove-background', upload.single('photo'), async (req: Request, res: Response): Promise<any> => {
     if (!req.file) {
         return res.status(400).send('No photo uploaded');

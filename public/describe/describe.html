@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About the Endpoint</title>
+</head>
+<body>
+
+<h1>Image Desccription and Captioning</h1>
+  <h2>Table of Contents</h2>
+  <ul>
+    <li><a href="#about-endpoint">About the Endpoint</a></li>
+    <li><a href="#parameters">Parameters</a></li>
+    <li><a href="#headers">Headers</a></li>
+    <li><a href="#request-body">Request Body</a></li>
+    <li><a href="#confidence-parameter">What is the confidence parameter?</a></li>
+    <li><a href="#example-api-call">Example API Call (Postman)</a></li>
+    <li><a href="#response-types">Response Types</a></li>
+    <li><a href="#error-codes">Error Codes</a></li>
+    <li><a href="#sample-response">Sample Response</a></li>
+  </ul>
+
+
+<p>
+  Full URL Path:
+  <code>POST http://localhost:3000/api/describe</code>
+</p>
+  <h2 id="about-endpoint">About the Endpoint</h2>
+  <p>
+    This endpoint takes in an image and will provide a description of the image and other fields.
+  </p>
+
+  <h2 id="parameters">Parameters</h2>
+  <ul>
+    <li>
+      <strong>confidence</strong> — A decimal value between 0 and 1 used to grab predictions above this threshold.<br>
+      <em>(Refer to the details below for explanation.)</em>
+    </li>
+  </ul>
+
+  <h2 id="headers">Headers</h2>
+  <pre>{
+  "Content-Type": "multipart/form-data"
+}</pre>
+
+  <h2 id="request-body">Request Body</h2>
+  <p>
+    An image file uploaded as multipart/form-data. The field name should be <strong>photo</strong>.
+  </p>
+
+  <h2 id="confidence-parameter">What is the confidence parameter?</h2>
+
+  <p>
+    In machine learning, an algorithm provides predictions along with a score representing how "confident" it is in the prediction.
+  </p>
+
+  <p>
+    For example, consider the following image:
+  </p>
+
+  <img src="../shapes.png" alt="Image of a circle, square, and triangle" width="300" height="300">
+
+  <p>
+    Suppose the algorithm detects a square in this image with a confidence score of 0.99.
+  </p>
+
+  <p>
+    By specifying the <strong>confidence</strong> parameter in the /describe endpoint, you are instructing the API
+    to only return predictions with a score higher than your specified threshold.
+    Higher confidence thresholds generally result in fewer, but more accurate, predictions.
+  </p>
+
+  <h2 id="example-api-call">Example API Call (Postman)</h2>
+
+  <p>Follow these steps to test the <strong>/describe</strong> endpoint using Postman:</p>
+  <ol>
+    <li>Open Postman and create a new <strong>POST</strong> request.</li>
+    <li>Set the URL to: <code>http://localhost:3000/api/describe</code> (adjust if your server is hosted elsewhere).</li>
+    <li>Under the <strong>Headers</strong> tab, add:
+      <ul>
+        <li>Key: <code>Content-Type</code></li>
+        <li>Value: <code>multipart/form-data</code> (Postman will handle this automatically when you add a file).</li>
+      </ul>
+    </li>
+    <li>Switch to the <strong>Body</strong> tab and select <strong>form-data</strong>.
+      <ul>
+        <li>Add a new key called <code>photo</code>.</li>
+        <li>Set the type to <strong>File</strong> and upload your image file.</li>
+      </ul>
+    </li>
+    <li>Optionally, add a query parameter to the URL if you want to specify <code>confidence</code>, e.g., <code>?confidence=0.8</code>.</li>
+    <li>Click <strong>Send</strong> to submit your request and receive the response.</li>
+  </ol>
+
+  <h2 id="response-types">Response Types</h2>
+  <p>The successful response returns a JSON object with the following fields:</p>
+  <ul>
+    <li><strong>description</strong> — A textual description of the detected content.</li>
+    <li><strong>associatedWords</strong> — An array of related words/tags.</li>
+    <li><strong>width</strong> — Width of the image.</li>
+    <li><strong>height</strong> — Height of the image.</li>
+    <li><strong>confidence</strong> — Confidence score for the prediction.</li>
+  </ul>
+
+  <h2 id="error-codes">Error Codes</h2>
+  <p>If something goes wrong, the API will respond with appropriate error codes:</p>
+  <ul>
+    <li><strong>400 Bad Request</strong> — If no file is provided or the request is malformed.</li>
+    <li><strong>422 Unprocessable Entity</strong> — If the uploaded file is not an image or fails validation.</li>
+    <li><strong>500 Internal Server Error</strong> — If an unexpected error occurs on the server.</li>
+  </ul>
+
+  <h2 id="sample-response">Here is the sample response if we use the shapes from above</h2>
+  <pre>{
+  "description": "a group of geometric shapes",
+  "associatedWords": [
+    "graphics",
+    "design"
+  ],
+  "width": 1024,
+  "height": 1024,
+  "confidence": 0.1
+}</pre>
+
+</body>
+</html>
