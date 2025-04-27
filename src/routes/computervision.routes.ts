@@ -5,6 +5,7 @@ import axios from 'axios';
 import {ImageAnalysisResult} from "../types/azureresponses/responses";
 import {validateAndConvert} from "../utils";
 import * as dotenv from 'dotenv';
+import {validateUploadedPhoto} from "../types/validation/photovalidation";
 
 dotenv.config()
 
@@ -27,7 +28,10 @@ const upload = multer({
     }
 });
 
-router.post('/describe', upload.single('photo'), async (req: Request, res: Response): Promise<any> => {
+router.post('/describe',
+    upload.single('photo'),
+    validateUploadedPhoto,
+    async (req: Request, res: Response): Promise<any> => {
     if (!req.file) {
         return res.status(400).send('No photo uploaded');
     }
@@ -47,7 +51,10 @@ router.post('/describe', upload.single('photo'), async (req: Request, res: Respo
     } );
 });
 
-router.post('/remove-background', upload.single('photo'), async (req: Request, res: Response): Promise<any> => {
+router.post('/remove-background',
+    upload.single('photo'),
+    validateUploadedPhoto,
+    async (req: Request, res: Response): Promise<any> => {
     if (!req.file) {
         return res.status(400).send('No photo uploaded');
     }
