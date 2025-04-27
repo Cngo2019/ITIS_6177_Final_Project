@@ -1,6 +1,8 @@
 
 import { Request, Response, NextFunction } from 'express';
 
+import fs from 'fs/promises';
+import path from 'path';
 /**
  * Parses and validates a confidence query parameter.
  *
@@ -42,4 +44,21 @@ export function errorHandler(
         error: err.message || 'Something went wrong.',
     });
 }
+
+
+export const cleanupUploadedFile = (req: Request, res: Response, next: NextFunction): void => {
+    const cleanup = () => {
+        if (req.file && req.file.path) {
+            const filePath = path.resolve(req.file.path);
+            fs.unlink(filePath)
+                .then(() => console.log(`Deleted uploaded file: ${filePath}`))
+                .catch((err) => console.error(`Failed to delete uploaded file: ${err}`));
+        }
+    };
+
+    res.on('finish', cleanup); // After successful response
+    res.on('close', cleanup);  // After aborted connection
+
+    next(); // Continue to next middleware
+};
 

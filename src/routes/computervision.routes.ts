@@ -3,7 +3,7 @@ import multer from 'multer';
 import {IMAGE_ANALYSIS_URL, SEGMENT_IMAGE_URL} from '../config/endpoints';
 import axios from 'axios';
 import {ImageAnalysisResult} from "../types/azureresponses/responses";
-import {validateAndConvert} from "../utils";
+import {validateAndConvert, cleanupUploadedFile} from "../utils";
 import * as dotenv from 'dotenv';
 import {validateUploadedPhoto} from "../types/validation/photovalidation";
 
@@ -31,6 +31,7 @@ const upload = multer({
 router.post('/describe',
     upload.single('photo'),
     validateUploadedPhoto,
+    cleanupUploadedFile,
     async (req: Request, res: Response): Promise<any> => {
     if (!req.file) {
         return res.status(400).send('No photo uploaded');
@@ -54,6 +55,7 @@ router.post('/describe',
 router.post('/remove-background',
     upload.single('photo'),
     validateUploadedPhoto,
+    cleanupUploadedFile,
     async (req: Request, res: Response): Promise<any> => {
     if (!req.file) {
         return res.status(400).send('No photo uploaded');
