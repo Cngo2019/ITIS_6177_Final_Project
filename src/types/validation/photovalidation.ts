@@ -8,18 +8,10 @@ export const validateUploadedPhoto: RequestHandler = (req, res, next) => {
             res.status(400).json({ error: 'No photo uploaded.' });
             return;
         }
-
-        const filePath = path.resolve(req.file.path);
-
-        if (!fs.existsSync(filePath)) {
-            res.status(400).json({ error: 'Uploaded photo is missing or was deleted.' });
-            return;
-        }
-
         next();
     } catch (error: any) {
         console.error('Photo validation error:', error.message);
-        res.status(500).json({ error: 'Internal server error during photo validation.' });
+        res.status(500).json({ error: 'Internal server error during photo validation. Please verify that the photo was not deleted from your system' });
         return;
     }
 };
