@@ -22,6 +22,6 @@ app.use('/docs', docsRoutes);
 app.use(limiter);
 
 app.listen(port, () => {
-    console.log(`Facial Analysis API is running at http://localhost:${port}`);
+    console.log(`Facial Analysis API is running at http://http://146.190.147.242:${port}`);
 });
 
