@@ -4,7 +4,7 @@ import path from 'path';
 
 export const validateUploadedPhoto: RequestHandler = (req, res, next) => {
     try {
-        if (!req.file || !req.file.path) {
+        if (!req.file) {
             res.status(400).json({ error: 'No photo uploaded.' });
             return;
         }
