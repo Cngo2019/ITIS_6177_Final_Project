@@ -1,6 +1,8 @@
-import { Request, Response, NextFunction, RequestHandler } from 'express';
+import {RequestHandler} from 'express';
 import fs from 'fs';
 import path from 'path';
+
+const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif']; // <-- you can add more if needed
 
 export const validateUploadedPhoto: RequestHandler = (req, res, next) => {
     try {
@@ -8,10 +10,18 @@ export const validateUploadedPhoto: RequestHandler = (req, res, next) => {
             res.status(400).json({ error: 'No photo uploaded.' });
             return;
         }
+
+        // Check MIME type
+        if (!allowedMimeTypes.includes(req.file.mimetype)) {
+            console.warn('Blocked file upload:', req.file.mimetype);
+            res.status(400).json({ error: 'Invalid file type. Only images are allowed.' });
+            return;
+        }
+
         next();
     } catch (error: any) {
         console.error('Photo validation error:', error.message);
-        res.status(500).json({ error: 'Internal server error during photo validation. Please verify that the photo was not deleted from your system' });
+        res.status(500).json({ error: 'Internal server error during photo validation.' });
         return;
     }
 };
