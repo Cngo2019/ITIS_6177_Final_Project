@@ -27,12 +27,12 @@ Analyzes an uploaded image and returns:
 
 
 
-## 2. `/remove-background` Endpoint
+## 2. `/extract-words` Endpoint
 
 For full details on error codes and request body, visit http://146.190.147.242:3000/docs/extract-words
 
 **URL:**  
-`POST http://146.190.147.242:3000/api/remove-background`
+`POST http://146.190.147.242:3000/api/extract-words`
 
 **Purpose:**  
-Uploads an image and returns a **background-removed** version of the image in **PNG** format.
+Takes an image and extracts the words and sentences.
