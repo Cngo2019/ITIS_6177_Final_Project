@@ -83,12 +83,15 @@
 <p>If something goes wrong, the API will respond with appropriate error codes:</p>
 <ul>
   <li><strong>400 Bad Request</strong> — No file was uploaded. Ensure the request includes a file named <code>photo</code> in the form-data.</li>
-  <br>
+
   <li><strong>415 Unsupported Media Type</strong> — The file type is not an image. Upload only JPEG, PNG, or BMP files.</li>
-  <<br>li><strong>500 Internal Server Error</strong> — An unexpected error occurred while processing:
+  <strong>500 Internal Server Error</strong> — An unexpected error occurred while processing.
+   This can be caused by various reasons such as:
     <ul>
-      <br>   <li>The image may be too small or large. <strong>Azure requires dimensions between 50×50 and 16,000×16,000 pixels.</strong></li>
-      <<br>li>There may be a connection error with the Azure Computer Vision service.</li>
+       <li>
+         The image may be too small or large. <strong>Azure requires dimensions between 50×50 and 16,000×16,000 pixels.</strong>
+       </li>
+      <li>There may be a connection error with the Azure Computer Vision service.</li>
     </ul>
   </li>
 </ul>
