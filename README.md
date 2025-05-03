@@ -6,7 +6,7 @@ http://146.190.147.242:3000/docs
 
 # API Endpoints Overview
 
-This server provides two endpoints for image processing - one that describes an image and another endpoint that simply removes the background of an image.
+This server provides two endpoints for image processing - one that describes an image and another endpoint that extracts the sentences/words from an image.
 
 ---
 
