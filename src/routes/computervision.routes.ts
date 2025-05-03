@@ -109,7 +109,7 @@ async function callExtractTextEndpoint(
         throw new Error("An error occurred while calling the computer vision api: " + azureErrorMessage);
     }
 }
-export function extractSentencesFromReadResult(readResult: ReadResult): string {
+export function extractSentencesFromReadResult(readResult: ReadResult): string[] {
     console.log(readResult);
     const sentences: string[] = [];
     for (const block of readResult.blocks) {
@@ -119,7 +119,7 @@ export function extractSentencesFromReadResult(readResult: ReadResult): string {
         }
     }
 
-    return sentences.join(' ');
+    return sentences;
 }
 
 

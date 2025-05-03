@@ -29,7 +29,7 @@ Analyzes an uploaded image and returns:
 
 ## 2. `/remove-background` Endpoint
 
-For full details on error codes and request body, visit http://146.190.147.242:3000/docs/remove-background
+For full details on error codes and request body, visit http://146.190.147.242:3000/docs/extract-words
 
 **URL:**  
 `POST http://146.190.147.242:3000/api/remove-background`
