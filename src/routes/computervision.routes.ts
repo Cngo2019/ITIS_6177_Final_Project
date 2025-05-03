@@ -1,8 +1,8 @@
 import {Request, Response, Router} from 'express';
 import multer from 'multer';
-import {IMAGE_ANALYSIS_URL, SEGMENT_IMAGE_URL} from '../config/endpoints';
+import {IMAGE_ANALYSIS_URL, EXTRACT_TEXT_URL} from '../config/endpoints';
 import axios from 'axios';
-import {ImageAnalysisResult} from "../types/azureresponses/responses";
+import {ImageAnalysisResult, ReadResult} from "../types/azureresponses/responses";
 import {validateAndConvert, cleanupUploadedFile} from "../utils";
 import * as dotenv from 'dotenv';
 import {validateUploadedPhoto} from "../types/validation/photovalidation";
@@ -33,37 +33,38 @@ router.post('/describe',
     validateUploadedPhoto,
     cleanupUploadedFile,
     async (req: Request, res: Response): Promise<any> => {
-    if (!req.file) {
-        return res.status(400).send('No photo uploaded');
-    }
+        if (!req.file) {
+            return res.status(400).send('No photo uploaded');
+        }
 
-    const imageToUpload = req.file.buffer;
-    const data = await callAnalyzeImageEndpoint(imageToUpload);
-    const confThreshold = validateAndConvert(req.query.confidence as string);
-    const tags = data.tagsResult.values.filter(it => it.confidence >= confThreshold);
+        const imageToUpload = req.file.buffer;
+        const data = await callAnalyzeImageEndpoint(imageToUpload);
+        const confThreshold = validateAndConvert(req.query.confidence as string);
+        const tags = data.tagsResult.values.filter(it => it.confidence >= confThreshold);
 
 
-    return res.send( {
-        description: data.captionResult.text,
-        associatedWords: tags.map(it => it.name),
-        width: data.metadata.width,
-        height: data.metadata.height,
-        confidence: confThreshold
-    } );
-});
+        return res.send({
+            description: data.captionResult.text,
+            associatedWords: tags.map(it => it.name),
+            width: data.metadata.width,
+            height: data.metadata.height,
+            confidence: confThreshold
+        });
+    });
 
-router.post('/remove-background',
+router.post('/extract-words',
     upload.single('photo'),
     validateUploadedPhoto,
     cleanupUploadedFile,
     async (req: Request, res: Response): Promise<any> => {
-    if (!req.file) {
-        return res.status(400).send('No photo uploaded');
-    }
-    const imageToUpload = req.file.buffer;
-    const data = await callImageSegmentEndpoint(imageToUpload);
-    res.setHeader('Content-Type', 'image/png');
-    res.send(Buffer.from(data as Uint8Array));
+        if (!req.file) {
+            return res.status(400).send('No photo uploaded');
+        }
+
+        const imageToUpload = req.file.buffer;
+        const data = await callExtractTextEndpoint(imageToUpload);
+        console.log(data.blocks);
+        return res.send(extractSentencesFromReadResult(data));
 });
 
 
@@ -86,19 +87,20 @@ async function callAnalyzeImageEndpoint(image: Buffer): Promise<ImageAnalysisRes
     }
 }
 
-async function callImageSegmentEndpoint(
+async function callExtractTextEndpoint(
     image: Buffer
-): Promise<ArrayBuffer> {
+): Promise<ReadResult> {
     try {
-        const response = await axios.post(SEGMENT_IMAGE_URL, image, {
+        const response = await axios.post(EXTRACT_TEXT_URL, image, {
             headers: {
                 'Ocp-Apim-Subscription-Key': apiKey,
                 'Content-Type': 'application/octet-stream',
             },
-            responseType: 'arraybuffer'
+            responseType: 'json'
         });
 
-        return response.data;
+        console.log("Response was: " ,response.data);
+        return response.data.readResult;
     } catch (error: any) {
         const azureErrorMessage =
             error?.response?.data?.error?.message ||
@@ -107,5 +109,18 @@ async function callImageSegmentEndpoint(
         throw new Error("An error occurred while calling the computer vision api: " + azureErrorMessage);
     }
 }
+export function extractSentencesFromReadResult(readResult: ReadResult): string[] {
+    console.log(readResult);
+    const sentences: string[] = [];
+    for (const block of readResult.blocks) {
+        for (const lines of block.lines) {
+            console.log(lines.text)
+            sentences.push(lines.text);
+        }
+    }
+
+    return sentences;
+}
+
 
 export default router;

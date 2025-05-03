@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Extract Words Endpoint</title>
+  <link rel="stylesheet" href="/docs-style.css" />
+</head>
+<body>
+<nav>
+  <a href="/">Home</a> |
+  <a href="/docs">Docs</a> |
+  <a href="/docs/describe">Describe Endpoint</a> |
+  <a href="/docs/extract-words">Extract Words Endpoint</a>
+</nav>
+
+<h1>Extract Words from Image</h1>
+
+<h2>Table of Contents</h2>
+<ul>
+  <li><a href="#about-endpoint">About the Endpoint</a></li>
+  <li><a href="#full-url">Full URL Path</a></li>
+  <li><a href="#headers">Headers</a></li>
+  <li><a href="#request-body">Request Body</a></li>
+  <li><a href="#example-api-call">Example API Call (Postman)</a></li>
+  <li><a href="#error-codes">Error Codes</a></li>
+</ul>
+
+<h2 id="about-endpoint">About the Endpoint</h2>
+<p>
+  This endpoint extracts readable text from an uploaded image using Azure's OCR (Optical Character Recognition) technology.
+  The resulting response is an array of the texts/lines found.
+  
+  <br> here is an example: <br>
+  <img src='../sample.png' width="300" height="300">
+
+  <br>
+  <code> [
+  "The quick brown",
+  "fox jumps over",
+  "the lazy dog."
+  ]
+  </code>
+</p>
+
+<h2 id="full-url">Full URL Path</h2>
+<p>
+  <code>POST http://146.190.147.242:3000/api/extract-words</code>
+</p>
+
+<h2 id="headers">Headers</h2>
+<pre>{
+  "Content-Type": "multipart/form-data"
+}</pre>
+
+<h2 id="request-body">Request Body</h2>
+<p>
+  An image file uploaded as multipart/form-data. The field name should be <strong>photo</strong>.
+</p>
+
+<h2 id="example-api-call">Example API Call (Postman)</h2>
+<p>Follow these steps to test the <strong>/extract-words</strong> endpoint using Postman:</p>
+<ol>
+  <li>Open Postman and create a new <strong>POST</strong> request.</li>
+  <li>Set the URL to: <code>http://146.190.147.242:3000/api/extract-words</code> </li>
+  <li>Under the <strong>Headers</strong> tab, verify that you have:
+    <ul>
+      <li>Key: <code>Content-Type</code></li>
+      <li>Value: <code>multipart/form-data</code></li>
+      <li>Note: Postman will automatically manage the boundary for you.</li>
+    </ul>
+  </li>
+  <li>Switch to the <strong>Body</strong> tab and select <strong>form-data</strong>.
+    <ul>
+      <li>Add a new key called <code>photo</code>.</li>
+      <li>Set the type to <strong>File</strong> and upload your image file.</li>
+    </ul>
+  </li>
+  <li>Click <strong>Send</strong> to submit your request. The response will contain JSON text data extracted from the image.</li>
+</ol>
+
+<h2 id="error-codes">Error Codes</h2>
+<p>If something goes wrong, the API will respond with appropriate error codes:</p>
+<ul>
+  <li><strong>400 Bad Request</strong> — No file was uploaded. Ensure the request includes a file named <code>photo</code> in the form-data.</li>
+
+  <li><strong>415 Unsupported Media Type</strong> — The file type is not an image. Upload only JPEG, PNG, or BMP files.</li>
+  <strong>500 Internal Server Error</strong> — An unexpected error occurred while processing.
+   This can be caused by various reasons such as:
+    <ul>
+       <li>
+         The image may be too small or large. <strong>Azure requires dimensions between 50×50 and 16,000×16,000 pixels.</strong>
+       </li>
+      <li>There may be a connection error with the Azure Computer Vision service.</li>
+    </ul>
+  </li>
+</ul>
+
+</body>
+</html>
