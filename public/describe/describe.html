@@ -87,16 +87,17 @@
     <li>Open Postman and create a new <strong>POST</strong> request.</li>
     <li>Set the URL to: <code>http://146.190.147.242:3000/api/describe</code>
     </li>
-     <li>Under the <strong>Headers</strong> tab, verify that you have:
-    <ul>
-      <li>Key: <code>Content-Type</code></li>
-      <li>Value: <code>multipart/form-data</code> </li> Postman should already set the header and boundary for you.
-    </ul>
-  </li>
+
     <li>Switch to the <strong>Body</strong> tab and select <strong>form-data</strong>.
         <ul>
             <li>Add a new key called <code>photo</code>.</li>
             <li>Set the type to <strong>File</strong> and upload your image file.</li>
+        </ul>
+    </li>
+    <li>Under the <strong>Headers</strong> tab, verify that you have:
+        <ul>
+            <li>Key: <code>Content-Type</code></li>
+            <li>Value: <code>multipart/form-data</code> </li> Postman should already set the header and boundary for you.
         </ul>
     </li>
     <li>Optionally, add a query parameter to the URL if you want to specify <code>confidence</code>, e.g., <code>?confidence=0.8</code>.
