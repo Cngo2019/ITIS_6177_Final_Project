@@ -7,8 +7,8 @@ router.get("/describe", (req, res) => {
     res.sendFile(path.join(process.cwd(), 'public/describe', 'describe.html'));
 });
 
-router.get("/remove-background", (req, res) => {
-    res.sendFile(path.join(process.cwd(), 'public/remove-background', 'remove-background.html'));
+router.get("/extract-words", (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'public/extract-words', 'extract-words.html'));
 });
 
 router.get("/", (req, res) => {

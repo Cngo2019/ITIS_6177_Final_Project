@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Remove Background Endpoint</title>
+  <title>Extract Words Endpoint</title>
   <link rel="stylesheet" href="/docs-style.css">
 </head>
 <body>
@@ -11,7 +11,7 @@
   <a href="/">Home</a> |
   <a href="/docs">Docs</a> |
   <a href="/docs/describe">Describe Endpoint</a> |
-  <a href="/docs/remove-background">Remove Background Endpoint</a>
+  <a href="/docs/remove-background">Extract Words Endpoint</a>
 </nav>
 
 <h1>Image Background Removal</h1>
@@ -51,10 +51,10 @@
 <ol>
   <li>Open Postman and create a new <strong>POST</strong> request.</li>
   <li>Set the URL to: <code>http://146.190.147.242:3000/api/remove-background</code> (adjust if your server is hosted elsewhere).</li>
-  <li>Under the <strong>Headers</strong> tab, add:
+  <li>Under the <strong>Headers</strong> tab, verify that you have:
     <ul>
       <li>Key: <code>Content-Type</code></li>
-      <li>Value: <code>multipart/form-data</code> (Postman will handle this automatically when you add a file).</li>
+      <li>Value: <code>multipart/form-data</code> </li> Postman should already set the header and boundary for you.
     </ul>
   </li>
   <li>Switch to the <strong>Body</strong> tab and select <strong>form-data</strong>.
@@ -75,7 +75,9 @@
     Occurs when:
     <ul>
       <li>An invalid file format is uploaded (e.g., a non-image file like a PDF).</li>
+      <br>
       <li>The image dimensions are too small or too large for processing. <br> <b><em>Azure requires images to be between 50×50 and 16,000×16,000 pixels</em></b></li>
+      <br>
       <li>An error occurred while communicating with the Azure Computer Vision service.</li>
     </ul>
   </li>
